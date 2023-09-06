@@ -11,11 +11,11 @@ const router = createBrowserRouter([
     element: <BooksListPage />,
   },
   {
-    path: "/books",
+    path: "books?",
     element: <BooksListPage />,
   },
   {
-    path: "/books/:bookId",
+    path: "books?/:bookId",
     element: <BookItemPage />,
   },
 ]);

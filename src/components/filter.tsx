@@ -1,23 +1,72 @@
-import { Box, FormControl, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from "@mui/material";
+import { CATEGORIES, SORT_BY } from "../appconfig";
 import { FilterProps } from "../app/interfaces";
 
-export const Filter = ({ filterName }: FilterProps) => {
+export const Filter = ({category, sortingMethod, setCategory, setSortingMethod}: FilterProps) => {
+  const handleCategoryChange = (event: SelectChangeEvent) => {
+    setCategory(event.target.value);
+  };
+
+  const handleSortingMethodChange = (event: SelectChangeEvent) => {
+    setSortingMethod(event.target.value);
+  };
+
   return (
-    <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
-      <Typography>{filterName}</Typography>
-      <FormControl>
-        <Select
-          displayEmpty
-          onChange={() => console.log("Changed!")}
-          labelId="select-filter"
-          id="select-filter"
-          //   renderValue={(selected) => {
-          //     return selected;
-          //   }}
-        >
-          <MenuItem>Item1</MenuItem>
-          <MenuItem>Item2</MenuItem>
-        </Select>
-      </FormControl></Box>
+    <Box sx={{ display: "flex" }}>
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth size="small">
+          <InputLabel id="select-category-type-label">Category</InputLabel>
+          <Select
+            onChange={handleCategoryChange}
+            labelId="select-filter"
+            id="select-filter"
+            value={category}
+            label="Category"
+            renderValue={(selected) => {
+              return selected;
+            }}
+          >
+            {CATEGORIES.map((item, id) => {
+              return (
+                <MenuItem key={id} value={item}>
+                  {item}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </Box>
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth size="small">
+          <InputLabel id="select-sortingMethod-type-label">Sort by</InputLabel>
+          <Select
+            onChange={handleSortingMethodChange}
+            labelId="select-filter"
+            id="select-filter"
+            value={sortingMethod}
+            label="Sort by"
+            renderValue={(selected) => {
+              return selected;
+            }}
+          >
+            {SORT_BY.map((item, id) => {
+              return (
+                <MenuItem key={id} value={item}>
+                  {item}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </Box>
+    </Box>
   );
 };

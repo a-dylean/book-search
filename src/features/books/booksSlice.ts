@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { MY_API_KEY } from "../../appconfig";
+import { MY_API_KEY, MAX_RESULTS } from "../../appconfig";
 import {
   BooksState,
   SearchingOptions,
@@ -13,19 +13,19 @@ import axios from "axios";
 
 const DEFAULT_PARAMS = {
   key: MY_API_KEY,
+  maxResults: MAX_RESULTS
 };
 
 export const getBooks = createAsyncThunk(
   "books/getBooks",
   async ({
-    searchTerm = "JS",
+    searchTerm,
     pageNumber,
-    pageSize,
     sortingMethod,
-    categories = "all",
+    categories,
   }: SearchingOptions) => {
     try {
-      const startIndex = (pageNumber - 1) * pageSize;
+      const startIndex = (pageNumber - 1) * MAX_RESULTS;
       const res = await axios.get(
         `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}${
           categories !== "all" ? `+subject:${categories}` : ""
@@ -34,8 +34,7 @@ export const getBooks = createAsyncThunk(
           params: {
             ...DEFAULT_PARAMS,
             startIndex: startIndex,
-            orderBy: sortingMethod,
-            maxResults: pageSize,
+            orderBy: sortingMethod
           },
         }
       );
@@ -48,33 +47,58 @@ export const getBooks = createAsyncThunk(
 
 const initialState: BooksState = {
   books: [],
-  totalItems: 0,
-  loading: false,
+  visibleBooks: [],
+  selectedBook: null,
+  totalItems: null,
+  isLoading: false,
+  isSuccess: false,
   error: "",
 };
 
 export const booksSlice = createSlice({
   name: "books",
   initialState,
-  reducers: {},
+  reducers: {
+    addBooks: (state, action) => {
+      //state.visibleBooks = action.payload;
+      state.visibleBooks.push(...action.payload);
+    },
+    emptyBooks: (state) => {
+      state.books = []
+    },
+    selectBook: (state, { payload }) => {
+      state.selectedBook = payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getBooks.pending, (state) => {
-      state.loading = true;
+      state.isLoading = true;
     });
     builder.addCase(
       getBooks.fulfilled,
       (state, action: PayloadAction<apiResponse>) => {
-        state.loading = false;
+        state.isLoading = false;
+        state.isSuccess = true;
         state.totalItems = action.payload.totalItems;
         state.books = action.payload.items;
-        }
+        // state.books = action.payload.items?.reduce((acc: any[], current: { id: any; }) => {
+        //   let exists = acc.find(item => {
+        //     return item.id === current.id;
+        //   })
+        //   if (!exists) {
+        //     acc = acc.concat(current);
+        //   }
+        //   return acc;
+        // }, [])
+       }
     );
     builder.addCase(getBooks.rejected, (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       state.books = [];
       state.error = action.error.message;
     });
   },
 });
 
+export const {addBooks, emptyBooks, selectBook} = booksSlice.actions;
 export default booksSlice.reducer;

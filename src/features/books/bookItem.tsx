@@ -1,45 +1,60 @@
-import { Card, CardMedia, Typography } from "@mui/material";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Divider,
+  Typography,
+} from "@mui/material";
 import { BookInfo } from "../../app/interfaces";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../app/routes";
+import { selectBook } from "./booksSlice";
+import { useAppDispatch } from "../../app/hooks";
+import { renderArrWithCommas } from "../../helpers/helperFuncs";
 
-
-function renderAuthors(arr: string[] | undefined): string {
-    if (!arr) {
-        return "";
-    } else {
-        if (arr.length === 0) {
-      return '';
-    } else if (arr.length === 1) {
-      return arr[0];
-    } else {
-      const lastIndex = arr.length - 1;
-      const formattedArray = arr.slice(0, lastIndex).join(', ');
-      return `${formattedArray}, ${arr[lastIndex]}`;
-    }
-    }
-    
-  }
-export const BookItem = ({id, volumeInfo}: BookInfo) => {
-    const authors = renderAuthors(volumeInfo.authors);
+export const BookItem = ({ id, volumeInfo }: BookInfo) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const authors = renderArrWithCommas(volumeInfo.authors);
   return (
-    <Card>
-      <CardMedia
-        component="img"
+    <CardActionArea>
+      <Card
+        sx={{ width: 200, height: 365 }}
+        onClick={() => {
+          dispatch(selectBook(volumeInfo));
+          navigate(`${routes.BOOK_ITEM}/${id}`);
+        }}
+      >
+        <CardMedia
+          component="img"
           src={volumeInfo.imageLinks?.thumbnail}
-          height="120px"
-          alt="post image"
+          height="160"
+          alt="book cover image"
           sx={{
+            padding: "1em 0",
             objectFit: "contain",
+            // boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
           }}
-        //   onError={(event) => {
-        //     event.target.style.display = "none";
-        //     event.onerror = null;
-        //  }}
-      />
-   
-        <Typography>Title: {volumeInfo.title}</Typography>
-        <Typography>Authors: {authors}</Typography>
-        <Typography>Category: {volumeInfo.categories?.[0]}</Typography>
-      
-    </Card>
+          //   onError={(event: Event) => {
+          //     event.target.style.display = "none";
+          //     event.onerror = null;
+          //  }}
+        />
+        <CardContent>
+          <Divider />
+          <Typography variant="body1" align="center">
+            {volumeInfo.title}
+          </Typography>
+          <Divider />
+          <Typography variant="body2">By: {authors}</Typography>
+          {volumeInfo.categories && (
+            <Typography variant="body2">
+              Category: {volumeInfo.categories?.[0]}
+            </Typography>
+          )}
+        </CardContent>
+      </Card>
+    </CardActionArea>
   );
 };
