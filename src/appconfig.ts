@@ -1,0 +1,1 @@
+export const MY_API_KEY = process.env.MY_API_KEY;
