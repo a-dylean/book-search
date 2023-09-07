@@ -16,6 +16,8 @@ export const Search = ({
   searchTerm,
   category,
   sortingMethod,
+  setPageNumber,
+  setData
 }: any) => {
   const dispatch = useAppDispatch();
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,6 +27,8 @@ export const Search = ({
 
   const searchHandler = () => {
     dispatch(emptyBooks());
+    setData([]);
+    setPageNumber(1);  
     dispatch(
       getBooks({
         searchTerm: searchTerm,

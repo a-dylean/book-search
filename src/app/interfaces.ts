@@ -11,32 +11,39 @@ export interface FilterProps {
   setSortingMethod: (sortingMethod: string) => void;
 }
 
+export interface BookIdProp {
+  bookId: string | undefined;
+}
+
+export interface BookItemState {
+  book: BookItemInfo;
+  isLoading: boolean;
+  isSuccess: boolean;
+  error?: string | undefined;
+}
+
 export interface BooksState {
   books: BookInfo[];
   visibleBooks: BookInfo[];
-  selectedBook: BookInfo2 | null ;
   totalItems: number | null;
   isLoading: boolean;
   isSuccess: boolean;
   error: string | undefined;
 }
 
-export interface BookInfo2 {
-    title: string;
-    subtitle: string;
-    authors?: string[];
-    publisher: string;
-    publishedDate: string;
-    description?: string;
-    categories?: string[];
-    imageLinks?: { smallThumbnail?: string; thumbnail?: string };
-    language: string;
+export interface BookItemInfo {
+  //id: string
+  title: string;
+  subtitle: string;
+  authors?: string[];
+  publisher: string;
+  publishedDate: string;
+  description?: string;
+  categories?: string[];
+  imageLinks: { thumbnail: string };
+  language: string;
 }
 
-// export interface industryIdentifier {
-//     type: string,
-//     identifier: string
-// }
 export interface BookInfo {
   id: string;
   volumeInfo: {
@@ -48,10 +55,9 @@ export interface BookInfo {
     description?: string;
     pageCount: number;
     categories?: string[];
-    imageLinks?: { smallThumbnail?: string; thumbnail?: string };
+    imageLinks: { thumbnail: string };
     language: string;
     previewLink: string;
-    //industryIdentifiers: industryIdentifier
   };
 }
 

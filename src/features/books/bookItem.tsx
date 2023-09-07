@@ -9,37 +9,28 @@ import {
 import { BookInfo } from "../../app/interfaces";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../app/routes";
-import { selectBook } from "./booksSlice";
-import { useAppDispatch } from "../../app/hooks";
 import { renderArrWithCommas } from "../../helpers/helperFuncs";
-
+import { DEFAULT_COVER } from "../../appconfig";
 export const BookItem = ({ id, volumeInfo }: BookInfo) => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const authors = renderArrWithCommas(volumeInfo.authors);
   return (
     <CardActionArea>
       <Card
         sx={{ width: 200, height: 365 }}
         onClick={() => {
-          dispatch(selectBook(volumeInfo));
           navigate(`${routes.BOOK_ITEM}/${id}`);
         }}
       >
         <CardMedia
           component="img"
-          src={volumeInfo.imageLinks?.thumbnail}
+          src={volumeInfo.imageLinks?.thumbnail || DEFAULT_COVER}
           height="160"
           alt="book cover image"
           sx={{
             padding: "1em 0",
             objectFit: "contain",
-            // boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
           }}
-          //   onError={(event: Event) => {
-          //     event.target.style.display = "none";
-          //     event.onerror = null;
-          //  }}
         />
         <CardContent>
           <Divider />

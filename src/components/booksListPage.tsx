@@ -17,13 +17,15 @@ export const BooksListPage = () => {
   const [sortingMethod, setSortingMethod] = useState<string>("relevance");
   const [searchTerm, setSearchTerm] = useState<string>("JS");
   const dispatch = useAppDispatch();
-  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [data, setData] = useState(books);
   const handleLoadMore = () => {
     const newPageNumber = pageNumber + 1;
     setPageNumber(newPageNumber);
+    setData((prev) => [...prev, ...data]);
   };
-  console.log(visibleBooks);
+ // console.log(data);
   console.log(books);
   useEffect(() => {
     dispatch(
@@ -39,8 +41,7 @@ export const BooksListPage = () => {
   }, [dispatch, pageNumber]);
 
   // useEffect(() => {
-  //   //setData((prev) => [...prev, ...books]);
-  //   dispatch(addBooks(books));
+  //   setData((prev) => [...prev, ...books]);
   // }, [books])
 
 
@@ -69,10 +70,12 @@ export const BooksListPage = () => {
       <Box sx={{display: "flex", justifyContent: "space-around", padding: 3}}>
       <Search
         pageNumber={pageNumber}
+        setPageNumber={setPageNumber}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         category={category}
         sortingMethod={sortingMethod}
+        setData={setData}
       />
       <Filter
         category={category}
@@ -91,7 +94,10 @@ export const BooksListPage = () => {
       >
         {content}
       </Grid>
+      {isLoading && <Spinner />}
+      {/* {hasMore &&  */}
       <Button onClick={handleLoadMore}>I want more booooks!</Button>
+      {/* } */}
     </Layout>
   );
 };

@@ -3,18 +3,13 @@ import {
   createAsyncThunk,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { MY_API_KEY, MAX_RESULTS } from "../../appconfig";
+import { MAX_RESULTS, DEFAULT_PARAMS } from "../../appconfig";
 import {
   BooksState,
   SearchingOptions,
   apiResponse,
 } from "../../app/interfaces";
 import axios from "axios";
-
-const DEFAULT_PARAMS = {
-  key: MY_API_KEY,
-  maxResults: MAX_RESULTS
-};
 
 export const getBooks = createAsyncThunk(
   "books/getBooks",
@@ -34,7 +29,8 @@ export const getBooks = createAsyncThunk(
           params: {
             ...DEFAULT_PARAMS,
             startIndex: startIndex,
-            orderBy: sortingMethod
+            orderBy: sortingMethod,
+            maxResults: MAX_RESULTS
           },
         }
       );
@@ -48,7 +44,6 @@ export const getBooks = createAsyncThunk(
 const initialState: BooksState = {
   books: [],
   visibleBooks: [],
-  selectedBook: null,
   totalItems: null,
   isLoading: false,
   isSuccess: false,
@@ -66,9 +61,6 @@ export const booksSlice = createSlice({
     emptyBooks: (state) => {
       state.books = []
     },
-    selectBook: (state, { payload }) => {
-      state.selectedBook = payload;
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(getBooks.pending, (state) => {
@@ -81,6 +73,7 @@ export const booksSlice = createSlice({
         state.isSuccess = true;
         state.totalItems = action.payload.totalItems;
         state.books = action.payload.items;
+        //state.visibleBooks = state.books.concat(action.payload.items);
         // state.books = action.payload.items?.reduce((acc: any[], current: { id: any; }) => {
         //   let exists = acc.find(item => {
         //     return item.id === current.id;
@@ -100,5 +93,5 @@ export const booksSlice = createSlice({
   },
 });
 
-export const {addBooks, emptyBooks, selectBook} = booksSlice.actions;
+export const {addBooks, emptyBooks} = booksSlice.actions;
 export default booksSlice.reducer;

@@ -1,5 +1,5 @@
 export const routes = {
-    ALL_BOOKS: '/',
-    BOOK_ITEM: '/books/:bookId?',
+    ALL_BOOKS: '/books/all',
+    BOOK_ITEM: '/books',
   };
   

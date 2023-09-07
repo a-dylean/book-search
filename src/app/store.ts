@@ -1,9 +1,10 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import booksReducer from '../features/books/booksSlice';
-
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import booksReducer from "../features/books/booksSlice";
+import bookItemReducer from "../features/books/bookItemSlice";
 export const store = configureStore({
   reducer: {
     books: booksReducer,
+    bookItem: bookItemReducer,
   },
 });
 

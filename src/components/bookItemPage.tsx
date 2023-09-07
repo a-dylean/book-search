@@ -1,52 +1,68 @@
-import { Card, Grid, CardMedia, CardContent, Typography, Divider } from "@mui/material";
-import { useAppSelector } from "../app/hooks";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Divider,
+  Box,
+  IconButton,
+} from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Layout } from "../app/layout";
 import { renderArrWithCommas } from "../helpers/helperFuncs";
+import { Image } from "mui-image";
+import KeyboardBackspaceRoundedIcon from "@mui/icons-material/KeyboardBackspaceRounded";
+import { useEffect } from "react";
+import { getBookbyId } from "../features/books/bookItemSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { DEFAULT_COVER } from "../appconfig";
+import { routes } from "../app/routes";
 
 export const BookItemPage = () => {
-    const selectedBook = useAppSelector(
-        (state) => state.books.selectedBook,
-      );
-      console.log(selectedBook)
-      const categories = renderArrWithCommas(selectedBook?.categories);
-      const authors = renderArrWithCommas(selectedBook?.authors);
-    return (
-        <>
-        {selectedBook && (
-          <Layout>
-            <Card>
-              <Grid container>
-                <Grid xs={6}>
-                  <CardMedia
-                    component="img"
-                    alt="book cover img"
-                    image={selectedBook.imageLinks?.thumbnail}
-                    sx={{
-                       // padding: "5em",
-                        objectFit: "contain",
-                        // boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-                      }}
-                  />
-                </Grid>
-                <Grid xs={6}>
-                  <CardContent>
-                    <Typography variant="h5">{selectedBook.title}</Typography>
-                    <Divider/>
-                    <Typography variant="h6">By: {authors}</Typography>
-                    <Typography variant="h6">Published by: {selectedBook.publisher} / {selectedBook.publishedDate}</Typography>
-                    <Typography variant="h6">Categories: {categories}</Typography>
-                    <Typography variant="h6">Language: {selectedBook.language}</Typography>
-                    <Typography variant="body2">{selectedBook.description}</Typography>
-                    {/* <Typography variant="h6">{`Availability: ${
-                      product.available ? 'in stock' : 'out of stock'
-                    }`}</Typography> */}
-                  
-                  </CardContent>
-                </Grid>
-              </Grid>
-            </Card>
-          </Layout>
-        )}
-      </>
-    )
-}
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { book } = useAppSelector((state) => state.bookItem);
+  const { bookId } = useParams();
+  const handleGoBack = () => {
+    navigate(routes.ALL_BOOKS);
+  }
+  useEffect(() => {
+    dispatch(getBookbyId(bookId));
+  }, [dispatch, bookId]);
+  const categories = renderArrWithCommas(book.categories);
+  const authors = renderArrWithCommas(book.authors);
+  return (
+    <>
+      {book && (
+        <Layout>
+          <Card>
+            <CardContent>
+              <IconButton onClick={handleGoBack}>
+                <KeyboardBackspaceRoundedIcon />
+              </IconButton>
+              <Typography variant="h5" align="center">
+                {book.title}
+              </Typography>
+              <Divider />
+              <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
+                <Image
+                  src={book.imageLinks?.thumbnail || DEFAULT_COVER }
+                  fit="contain"
+                  height={300}
+                />
+              </Box>
+              <Typography variant="h6">By: {authors}</Typography>
+              <Typography variant="h6">
+                Published by: {book.publisher} / {book.publishedDate}
+              </Typography>
+              {categories && (
+                <Typography variant="h6">Categories: {categories}</Typography>
+              )}
+              <Typography variant="h6">Language: {book.language}</Typography>
+              <Typography variant="body2">{book.description}</Typography>
+            </CardContent>
+          </Card>
+        </Layout>
+      )}
+    </>
+  );
+};
