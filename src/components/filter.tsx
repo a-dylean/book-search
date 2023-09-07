@@ -5,7 +5,6 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  Typography,
 } from "@mui/material";
 import { CATEGORIES, SORT_BY } from "../appconfig";
 import { FilterProps } from "../app/interfaces";
@@ -20,6 +19,8 @@ export const Filter = ({category, sortingMethod, setCategory, setSortingMethod}:
   };
 
   return (
+    <>
+    <Box sx={{p: 0.5}}></Box>
     <Box sx={{ display: "flex" }}>
       <Box sx={{ minWidth: 120 }}>
         <FormControl fullWidth size="small">
@@ -30,6 +31,7 @@ export const Filter = ({category, sortingMethod, setCategory, setSortingMethod}:
             id="select-filter"
             value={category}
             label="Category"
+            sx={{backgroundColor: "#FFF"}}
             renderValue={(selected) => {
               return selected;
             }}
@@ -44,6 +46,7 @@ export const Filter = ({category, sortingMethod, setCategory, setSortingMethod}:
           </Select>
         </FormControl>
       </Box>
+      <Box sx={{p: 0.5}}></Box>
       <Box sx={{ minWidth: 120 }}>
         <FormControl fullWidth size="small">
           <InputLabel id="select-sortingMethod-type-label">Sort by</InputLabel>
@@ -52,6 +55,7 @@ export const Filter = ({category, sortingMethod, setCategory, setSortingMethod}:
             labelId="select-filter"
             id="select-filter"
             value={sortingMethod}
+            sx={{backgroundColor: "#FFF"}}
             label="Sort by"
             renderValue={(selected) => {
               return selected;
@@ -68,5 +72,6 @@ export const Filter = ({category, sortingMethod, setCategory, setSortingMethod}:
         </FormControl>
       </Box>
     </Box>
+    </>
   );
 };

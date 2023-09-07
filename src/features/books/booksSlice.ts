@@ -34,6 +34,9 @@ export const getBooks = createAsyncThunk(
           },
         }
       );
+      if (res.data.totalItems === 0) {
+        res.data["items"] = []
+      }
       return res.data;
     } catch (error) {
       console.error("rejected", error);
@@ -71,8 +74,9 @@ export const booksSlice = createSlice({
       (state, action: PayloadAction<apiResponse>) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.totalItems = action.payload.totalItems;
         state.books = action.payload.items;
+        state.totalItems = action.payload.totalItems;
+
         //state.visibleBooks = state.books.concat(action.payload.items);
         // state.books = action.payload.items?.reduce((acc: any[], current: { id: any; }) => {
         //   let exists = acc.find(item => {
@@ -92,6 +96,6 @@ export const booksSlice = createSlice({
     });
   },
 });
-
+console.log(booksSlice)
 export const {addBooks, emptyBooks} = booksSlice.actions;
 export default booksSlice.reducer;

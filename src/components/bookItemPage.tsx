@@ -24,7 +24,7 @@ export const BookItemPage = () => {
   const { bookId } = useParams();
   const handleGoBack = () => {
     navigate(routes.ALL_BOOKS);
-  }
+  };
   useEffect(() => {
     dispatch(getBookbyId(bookId));
   }, [dispatch, bookId]);
@@ -45,12 +45,12 @@ export const BookItemPage = () => {
               <Divider />
               <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
                 <Image
-                  src={book.imageLinks?.thumbnail || DEFAULT_COVER }
+                  src={book.imageLinks?.thumbnail || DEFAULT_COVER}
                   fit="contain"
                   height={300}
                 />
               </Box>
-              <Typography variant="h6">By: {authors}</Typography>
+              {authors && <Typography variant="h6">By: {authors}</Typography>}
               <Typography variant="h6">
                 Published by: {book.publisher} / {book.publishedDate}
               </Typography>

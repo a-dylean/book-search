@@ -38,7 +38,7 @@ export const BookItem = ({ id, volumeInfo }: BookInfo) => {
             {volumeInfo.title}
           </Typography>
           <Divider />
-          <Typography variant="body2">By: {authors}</Typography>
+          {authors && <Typography variant="body2">By: {authors}</Typography>}
           {volumeInfo.categories && (
             <Typography variant="body2">
               Category: {volumeInfo.categories?.[0]}

@@ -17,18 +17,17 @@ export const Search = ({
   category,
   sortingMethod,
   setPageNumber,
-  setData
+  setData,
 }: any) => {
   const dispatch = useAppDispatch();
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSearchTerm = e.target.value;
-    setSearchTerm(newSearchTerm);
-  };
 
   const searchHandler = () => {
+    if (searchTerm.trim().length === 0) {
+      return ;
+    }
     dispatch(emptyBooks());
     setData([]);
-    setPageNumber(1);  
+    setPageNumber(1);
     dispatch(
       getBooks({
         searchTerm: searchTerm,
@@ -38,6 +37,15 @@ export const Search = ({
       })
     );
   };
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchTerm = e.target.value.trim();
+    setSearchTerm(newSearchTerm);
+  };
+  const handleEnterPress = (e: { keyCode: number }) => {
+    if (e.keyCode === 13) {
+      searchHandler();
+    }
+  };
 
   return (
     <FormControl size="small" sx={{ minWidth: 120 }}>
@@ -45,6 +53,7 @@ export const Search = ({
       <OutlinedInput
         label="Search"
         onChange={handleSearchChange}
+        onKeyDown={handleEnterPress}
         endAdornment={
           <InputAdornment position="end">
             <IconButton edge="end" onClick={searchHandler}>
@@ -52,6 +61,7 @@ export const Search = ({
             </IconButton>
           </InputAdornment>
         }
+        sx={{ backgroundColor: "#FFF" }}
       />
     </FormControl>
   );

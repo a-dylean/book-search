@@ -6,9 +6,7 @@ import {
   import { MY_API_KEY} from "../../appconfig";
   import {
       BookInfo,
-      BookItemInfo,
     BookItemState,
-    apiResponse,
   } from "../../app/interfaces";
   import axios from "axios";
   

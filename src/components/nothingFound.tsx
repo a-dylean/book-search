@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 export const NothingFound = () => {
   return (
     <>
-      <Box sx={{ width: 300 }}>
+      <Box sx={{ position: "flex", justifyContent: "center" }}>
         <Typography variant="h6" align="center">
         No books found matching your request. 
         </Typography>
