@@ -32,7 +32,6 @@ npm install
 3. Run the app
 ```
 npm run start
-
 ```
 
 ## Screenshots ##
