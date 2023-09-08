@@ -45,7 +45,7 @@ export const BooksListPage = () => {
 
   let content;
 
-  if (isSuccess) {
+  if (isSuccess && books) {
     const renderedItems = Object.values(books).map((book, idx) => (
       <Grid
         item
