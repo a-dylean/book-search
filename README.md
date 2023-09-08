@@ -1,28 +1,43 @@
+# Books Search app #
 Simple SPA enabling users to search for books using Google Books API. This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) TS template.
 
-## Available Scripts
+Deployed version [here](https://book-search-beryl.vercel.app/books/all)
 
-In the project directory, you can run:
+## Features ##
+* Search for books by title
+* Sort the results by categories
+* Sort the results by relevance and/or date
+* Detailed info about a book on separate page
+* 'Load more' pagination
+* Responsive layout
+* Docker image
 
-### `npm start`
+## Tech stack ##
+* React
+* React Router
+* Redux, ReduxToolkit
+* Axios
+* NodeJS
+* MUI5
 
-Runs the app in the development mode.
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## How to run locally ##
+1. Clone the repositary
+```
+git clone https://github.com/a-dylean/book-search.git
+```
+2. Install dependencies
+```
+npm install
+```
+3. Run the app
+```
+npm run start
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
 
-### `npm test`
+## Screenshots ##
+<img width="476" alt="Screenshot1_books" src="https://github.com/a-dylean/book-search/assets/83976465/5a4d8a78-cfa7-4d9b-aedc-f5032f4c8693">
+<img width="466" alt="Screenshot2_books" src="https://github.com/a-dylean/book-search/assets/83976465/9cf7627d-ad18-4c1c-92d0-7e9024db4535">
+<img width="478" alt="Screenshot3_books" src="https://github.com/a-dylean/book-search/assets/83976465/13c56993-1a00-4727-b71a-721e4a64caaa">
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
