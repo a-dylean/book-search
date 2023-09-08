@@ -16,6 +16,7 @@ import { getBookbyId } from "../features/books/bookItemSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { DEFAULT_COVER } from "../appconfig";
 import { routes } from "../app/routes";
+import MDEditor from "@uiw/react-md-editor";
 
 export const BookItemPage = () => {
   const navigate = useNavigate();
@@ -58,7 +59,19 @@ export const BookItemPage = () => {
                 <Typography variant="h6">Categories: {categories}</Typography>
               )}
               <Typography variant="h6">Language: {book.language}</Typography>
-              <Typography variant="body2">{book.description}</Typography>
+              {book.description && (
+                <>
+                  <Typography variant="h6">Description:</Typography>
+                  <MDEditor.Markdown
+                    source={book.description}
+                    style={{
+                      padding: 15,
+                      border: "1px solid #e0e0e0",
+                      borderRadius: 5,
+                    }}
+                  />
+                </>
+              )}
             </CardContent>
           </Card>
         </Layout>
