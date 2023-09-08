@@ -25,7 +25,8 @@ Deployed version [here](https://book-search-beryl.vercel.app/books/all).
 ```
 git clone https://github.com/a-dylean/book-search.git
 ```
-2. Install dependencies
+2. Add .env file with API key named MY_API_KEY
+3. Install dependencies
 ```
 npm install
 ```
