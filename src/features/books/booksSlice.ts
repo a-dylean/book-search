@@ -1,42 +1,33 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  PayloadAction,
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { MAX_RESULTS, DEFAULT_PARAMS } from "../../appconfig";
-import {
-  BooksState,
-  SearchingOptions,
-  apiResponse,
-} from "../../app/interfaces";
+import { BooksState, SearchOptions, ApiResponse } from "../../app/interfaces";
 import axios from "axios";
+import { searchOptionsEquals } from "../../helpers/helperFuncs";
 
 export const getBooks = createAsyncThunk(
   "books/getBooks",
-  async ({
-    searchTerm,
-    pageNumber,
-    sortingMethod,
-    categories,
-  }: SearchingOptions) => {
+  async (searchOptions: SearchOptions) => {
+    const { searchTerm, pageNumber, sortingMethod, categories } = searchOptions;
     try {
       const startIndex = (pageNumber - 1) * MAX_RESULTS;
       const res = await axios.get(
-        `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}${
-          categories !== "all" ? `+subject:${categories}` : ""
-        }`,
+        "https://www.googleapis.com/books/v1/volumes",
         {
           params: {
             ...DEFAULT_PARAMS,
+            q:
+              searchTerm +
+              (categories !== "all" ? `+subject:${categories}` : ""),
             startIndex: startIndex,
             orderBy: sortingMethod,
-            maxResults: MAX_RESULTS
+            maxResults: MAX_RESULTS,
           },
         }
       );
       if (res.data.totalItems === 0) {
-        res.data["items"] = []
+        res.data.items = [];
       }
+      res.data.searchOptions = searchOptions;
       return res.data;
     } catch (error) {
       console.error("rejected", error);
@@ -46,8 +37,10 @@ export const getBooks = createAsyncThunk(
 
 const initialState: BooksState = {
   books: [],
-  visibleBooks: [],
-  totalItems: null,
+  searchOptions: {
+    pageNumber: 0,
+  },
+  totalItems: 0,
   isLoading: false,
   isSuccess: false,
   error: "",
@@ -56,38 +49,26 @@ const initialState: BooksState = {
 export const booksSlice = createSlice({
   name: "books",
   initialState,
-  reducers: {
-    addBooks: (state, action) => {
-      //state.visibleBooks = action.payload;
-      state.visibleBooks.push(...action.payload);
-    },
-    emptyBooks: (state) => {
-      state.books = []
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getBooks.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(
       getBooks.fulfilled,
-      (state, action: PayloadAction<apiResponse>) => {
+      (state, action: PayloadAction<ApiResponse>) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.books = action.payload.items;
         state.totalItems = action.payload.totalItems;
-
-        //state.visibleBooks = state.books.concat(action.payload.items);
-        // state.books = action.payload.items?.reduce((acc: any[], current: { id: any; }) => {
-        //   let exists = acc.find(item => {
-        //     return item.id === current.id;
-        //   })
-        //   if (!exists) {
-        //     acc = acc.concat(current);
-        //   }
-        //   return acc;
-        // }, [])
-       }
+        if (
+          searchOptionsEquals(state.searchOptions, action.payload.searchOptions)
+        ) {
+          state.books = [...state.books, ...action.payload.items];
+        } else {
+          state.books = action.payload.items;
+        }
+        state.searchOptions = action.payload.searchOptions;
+      }
     );
     builder.addCase(getBooks.rejected, (state, action) => {
       state.isLoading = false;
@@ -96,6 +77,5 @@ export const booksSlice = createSlice({
     });
   },
 });
-console.log(booksSlice)
-export const {addBooks, emptyBooks} = booksSlice.actions;
+
 export default booksSlice.reducer;

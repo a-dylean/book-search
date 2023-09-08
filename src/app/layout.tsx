@@ -2,11 +2,11 @@ import { Container } from "@mui/material";
 import { Props } from "./interfaces";
 
 export const Layout = ({ children }: Props) => {
- return (
+  return (
     <>
       <Container>
         <main>{children}</main>
       </Container>
     </>
   );
-}
+};

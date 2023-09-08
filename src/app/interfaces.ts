@@ -24,17 +24,15 @@ export interface BookItemState {
 
 export interface BooksState {
   books: BookInfo[];
-  visibleBooks: BookInfo[];
-  totalItems: number | null;
+  searchOptions: SearchOptions;
+  totalItems: number;
   isLoading: boolean;
   isSuccess: boolean;
   error: string | undefined;
 }
 
 export interface BookItemInfo {
-  //id: string
   title: string;
-  subtitle: string;
   authors?: string[];
   publisher: string;
   publishedDate: string;
@@ -48,7 +46,6 @@ export interface BookInfo {
   id: string;
   volumeInfo: {
     title: string;
-    subtitle: string;
     authors?: string[];
     publisher: string;
     publishedDate: string;
@@ -57,18 +54,18 @@ export interface BookInfo {
     categories?: string[];
     imageLinks: { thumbnail: string };
     language: string;
-    previewLink: string;
   };
 }
 
-export interface SearchingOptions {
+export interface SearchOptions {
   searchTerm?: string;
   pageNumber: number;
   sortingMethod?: string;
   categories?: string;
 }
 
-export interface apiResponse {
+export interface ApiResponse {
   totalItems: number;
-  items: any;
+  items: BookInfo[];
+  searchOptions: SearchOptions;
 }

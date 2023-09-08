@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   FormControl,
   IconButton,
@@ -6,36 +7,14 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useAppDispatch } from "../app/hooks";
-import { emptyBooks, getBooks } from "../features/books/booksSlice";
-import React from "react";
 
-export const Search = ({
-  pageNumber,
-  setSearchTerm,
-  searchTerm,
-  category,
-  sortingMethod,
-  setPageNumber,
-  setData,
-}: any) => {
-  const dispatch = useAppDispatch();
-
+export const Search = ({ onSearchTermChange }: any) => {
+  const [searchTerm, setSearchTerm] = useState("");
   const searchHandler = () => {
     if (searchTerm.trim().length === 0) {
-      return ;
+      return;
     }
-    dispatch(emptyBooks());
-    setData([]);
-    setPageNumber(1);
-    dispatch(
-      getBooks({
-        searchTerm: searchTerm,
-        pageNumber: pageNumber,
-        categories: category,
-        sortingMethod: sortingMethod,
-      })
-    );
+    onSearchTermChange(searchTerm);
   };
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchTerm = e.target.value.trim();

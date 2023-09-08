@@ -34,9 +34,11 @@ export const BookItem = ({ id, volumeInfo }: BookInfo) => {
         />
         <CardContent>
           <Divider />
-          <Typography variant="body1" align="center">
-            {volumeInfo.title}
-          </Typography>
+          {volumeInfo.title && (
+            <Typography variant="body1" align="center">
+              {volumeInfo.title}
+            </Typography>
+          )}
           <Divider />
           {authors && <Typography variant="body2">By: {authors}</Typography>}
           {volumeInfo.categories && (

@@ -4,53 +4,49 @@ import { Search } from "./search";
 import { Layout } from "../app/layout";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useEffect, useState } from "react";
-import { emptyBooks, getBooks } from "../features/books/booksSlice";
+import { getBooks } from "../features/books/booksSlice";
 import { BookItem } from "../features/books/bookItem";
 import { Spinner } from "./spinner";
 import { NothingFound } from "./nothingFound";
 
 export const BooksListPage = () => {
-  const { visibleBooks, books, isLoading, isSuccess, error, totalItems } =
-    useAppSelector((state) => state.books);
+  const dispatch = useAppDispatch();
+  const { books, isLoading, isSuccess, error, totalItems } = useAppSelector(
+    (state) => state.books
+  );
   const [category, setCategory] = useState<string>("all");
   const [sortingMethod, setSortingMethod] = useState<string>("relevance");
-  const [searchTerm, setSearchTerm] = useState<string>("JS");
-  const dispatch = useAppDispatch();
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [data, setData] = useState(books);
-  const handleLoadMore = () => {
-    const newPageNumber = pageNumber + 1;
-    setPageNumber(newPageNumber);
-    //setData((prev) => [...prev, ...data]);
-  };
-  // console.log(data);
-  //console.log(books);
+  const [searchTerm, setSearchTerm] = useState<string>("js");
+
   useEffect(() => {
-    dispatch(emptyBooks);
+    setHasMore(books.length < totalItems);
+  }, [totalItems, books]);
+
+  useEffect(() => {
     dispatch(
       getBooks({
         searchTerm: searchTerm,
-        pageNumber: pageNumber,
         categories: category,
         sortingMethod: sortingMethod,
+        pageNumber: pageNumber,
       })
     );
-    setHasMore(books.length > 0);
-    //setData((prev) => [...prev, ...books]);
-  }, [dispatch, pageNumber]);
+  }, [dispatch, pageNumber, category, sortingMethod, searchTerm]);
 
-  useEffect(() => {
-    setData((prev) => [...prev, ...books]);
-  }, [books]);
+  const handleSearchTermChange = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  };
+
+  const handleLoadMore = () => {
+    setPageNumber((prev) => prev + 1);
+  };
 
   let content;
 
-  // if (isLoading) {
-  //   content = <></>;
-  // } else
   if (isSuccess) {
-    const renderedItems = Object.values(data).map((book, idx) => (
+    const renderedItems = Object.values(books).map((book, idx) => (
       <Grid
         item
         key={idx}
@@ -81,7 +77,7 @@ export const BooksListPage = () => {
           </Grid>
         </>
       );
-    } else if (renderedItems.length === 0 ) {
+    } else if (renderedItems.length === 0 && !isLoading) {
       content = <NothingFound />;
     }
   } else if (error) {
@@ -96,15 +92,7 @@ export const BooksListPage = () => {
         discover endless information on every book imaginable
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "space-around", padding: 3 }}>
-        <Search
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          category={category}
-          sortingMethod={sortingMethod}
-          setData={setData}
-        />
+        <Search onSearchTermChange={handleSearchTermChange} />
         <Filter
           category={category}
           sortingMethod={sortingMethod}
@@ -114,17 +102,17 @@ export const BooksListPage = () => {
       </Box>
       {content}
       {isLoading && <Spinner />}
-      {hasMore && 
-      <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
-        <Button
-          onClick={handleLoadMore}
-          variant="outlined"
-          sx={{ backgroundColor: "#FFF" }}
-        >
-          I want more booooks!
-        </Button>
-      </Box>
-     }
+      {hasMore && (
+        <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
+          <Button
+            onClick={handleLoadMore}
+            variant="outlined"
+            sx={{ backgroundColor: "#FFF" }}
+          >
+            I want more booooks!
+          </Button>
+        </Box>
+      )}
     </Layout>
   );
 };
